@@ -2,6 +2,7 @@ package app
 
 import (
 	grpcApp "github.com/xjl0/mi-sso/internal/app/grpc"
+	"github.com/xjl0/mi-sso/internal/app/validation"
 	"log/slog"
 	"time"
 )
@@ -11,7 +12,8 @@ type App struct {
 }
 
 func NewApp(log *slog.Logger, GRPCHost string, tokenTTL time.Duration) *App {
-	gApp := grpcApp.NewApp(log, GRPCHost)
+	vl := validation.New()
+	gApp := grpcApp.NewApp(log, GRPCHost, vl)
 	return &App{
 		GRPCServer: gApp,
 	}

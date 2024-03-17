@@ -2,6 +2,7 @@ package grpcApp
 
 import (
 	"fmt"
+	"github.com/xjl0/mi-sso/internal/app/validation"
 	authgRPC "github.com/xjl0/mi-sso/internal/grpc/auth"
 	"google.golang.org/grpc"
 	"log/slog"
@@ -12,12 +13,13 @@ type App struct {
 	log        *slog.Logger
 	gRPCServer *grpc.Server
 	gRPCHost   string
+	vl         *validation.App
 }
 
-func NewApp(log *slog.Logger, gRPCHost string) *App {
+func NewApp(log *slog.Logger, gRPCHost string, vl *validation.App) *App {
 	gRPCServer := grpc.NewServer()
 
-	authgRPC.Register(gRPCServer)
+	authgRPC.Register(gRPCServer, vl)
 
 	return &App{
 		log:        log,
