@@ -5,6 +5,8 @@ import (
 	"github.com/xjl0/mi-sso/internal/config"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -14,8 +16,20 @@ func main() {
 	log.Info("Starting...", slog.String("creator", "github.com/xjl0"))
 
 	apl := app.NewApp(log, cfg.GRPCPort, cfg.JwtTTL)
-	apl.GRPCServer.MustRun()
 
+	go apl.GRPCServer.MustRun()
+
+	stop := make(chan os.Signal, 1)
+
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
+
+	si := <-stop
+
+	log.Info("Stopping...", slog.String("signal", si.String()))
+
+	apl.GRPCServer.Stop()
+
+	log.Info("Stopped")
 }
 
 func setLogger(level string, isLocal bool) *slog.Logger {
