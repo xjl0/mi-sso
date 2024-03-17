@@ -13,7 +13,7 @@ func main() {
 	cfg := config.MustLoad()
 	log := setLogger(cfg.LogLevel, cfg.IsLocal)
 
-	log.Info("Starting...", slog.String("creator", "github.com/xjl0"))
+	log.Info("App Starting", slog.String("creator", "github.com/xjl0"))
 
 	apl := app.NewApp(log, cfg.GRPCHost, cfg.JwtTTL)
 
@@ -25,11 +25,11 @@ func main() {
 
 	si := <-stop
 
-	log.Info("Stopping...", slog.String("signal", si.String()))
+	log.Info("App Stopping", slog.String("signal", si.String()))
 
 	apl.GRPCServer.Stop()
 
-	log.Info("Stopped")
+	log.Info("App Stopped")
 }
 
 func setLogger(level string, isLocal bool) *slog.Logger {
