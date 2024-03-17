@@ -1,8 +1,9 @@
 package main
 
 import (
+	"github.com/xjl0/mi-sso/internal/app"
+	"github.com/xjl0/mi-sso/internal/config"
 	"log/slog"
-	"mi-sso/internal/config"
 	"os"
 )
 
@@ -11,6 +12,9 @@ func main() {
 	log := setLogger(cfg.LogLevel, cfg.IsLocal)
 
 	log.Info("Starting...", slog.String("creator", "github.com/xjl0"))
+
+	apl := app.NewApp(log, cfg.GRPCPort, cfg.JwtTTL)
+	apl.GRPCServer.MustRun()
 
 }
 
