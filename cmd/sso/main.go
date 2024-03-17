@@ -15,7 +15,7 @@ func main() {
 
 	log.Info("Starting...", slog.String("creator", "github.com/xjl0"))
 
-	apl := app.NewApp(log, cfg.GRPCPort, cfg.JwtTTL)
+	apl := app.NewApp(log, cfg.GRPCHost, cfg.JwtTTL)
 
 	go apl.GRPCServer.MustRun()
 

@@ -11,10 +11,10 @@ import (
 type App struct {
 	log        *slog.Logger
 	gRPCServer *grpc.Server
-	port       int
+	gRPCHost   string
 }
 
-func NewApp(log *slog.Logger, port int) *App {
+func NewApp(log *slog.Logger, gRPCHost string) *App {
 	gRPCServer := grpc.NewServer()
 
 	authgRPC.Register(gRPCServer)
@@ -22,7 +22,7 @@ func NewApp(log *slog.Logger, port int) *App {
 	return &App{
 		log:        log,
 		gRPCServer: gRPCServer,
-		port:       port,
+		gRPCHost:   gRPCHost,
 	}
 }
 
@@ -34,11 +34,11 @@ func (a *App) MustRun() {
 
 func (a *App) Run() error {
 	const o = "grpcApp.Run"
-	log := a.log.With(slog.String("o", o), slog.Int("port", a.port))
+	log := a.log.With(slog.String("o", o), slog.String("host", a.gRPCHost))
 
 	log.Info("Starting gRPC server...")
 
-	l, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
+	l, err := net.Listen("tcp", a.gRPCHost)
 	if err != nil {
 		return fmt.Errorf("%s: %w", o, err)
 	}
